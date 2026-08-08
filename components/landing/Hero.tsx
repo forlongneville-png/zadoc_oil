@@ -24,9 +24,9 @@ export default function Hero({ t, onGetStarted }: HeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="mb-10 max-w-xl sm:mb-14"
-        >
-          <h1 className="text-[2.35rem] font-semibold leading-[1.08] tracking-tight text-zadoc-foreground sm:text-6xl">
-            {t.hero.headline}
+        ><h1 className="text-[2.35rem] font-semibold leading-[1.08] tracking-tight text-zadoc-foreground sm:text-6xl">
+            {t.hero.headlinePrefix}{' '}
+            <span className="hero-highlight-gradient">{t.hero.headlineHighlight}</span>
           </h1>
           <p className="mt-5 max-w-md text-[1.05rem] leading-relaxed text-zadoc-muted sm:text-lg">
             {t.hero.subtext}

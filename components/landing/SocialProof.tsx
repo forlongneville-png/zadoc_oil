@@ -98,7 +98,7 @@ export default function SocialProof({ t }: SocialProofProps) {
                         Your browser does not support embedded video.
                       </video>
                     ) : (
-                      
+                      <a
                         href={video?.video_url ?? '#'}
                         target="_blank"
                         rel="noopener noreferrer"
