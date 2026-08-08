@@ -7,7 +7,6 @@ import PhotoShowcase from '@/components/landing/PhotoShowcase';
 import Problem from '@/components/landing/Problem';
 import Solution from '@/components/landing/Solution';
 import WhyZadoc from '@/components/landing/WhyZadoc';
-import SocialProof from '@/components/landing/SocialProof';
 import FinalCta from '@/components/landing/FinalCta';
 import Footer from '@/components/landing/Footer';
 import AuthSheet from '@/components/auth/AuthSheet';
@@ -122,7 +121,6 @@ export default function Home() {
       <Problem t={t} />
       <Solution t={t} />
       <WhyZadoc t={t} />
-      <SocialProof t={t} />
       <FinalCta t={t} onGetStarted={() => setSheetOpen(true)} />
       <Footer t={t} />
 

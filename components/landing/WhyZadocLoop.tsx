@@ -25,7 +25,7 @@ export default function WhyZadocLoop({ bullets, icon: Icon }: WhyZadocLoopProps)
       <motion.div
         className="flex flex-col"
         animate={{ y: ['0%', '-50%'] }}
-        transition={{ duration: 14, ease: 'linear', repeat: Infinity }}
+        transition={{ duration: 9, ease: 'linear', repeat: Infinity }}
       >
         {track.map((line, i) => (
           <div key={i} className="flex items-center gap-3 px-8 py-6">

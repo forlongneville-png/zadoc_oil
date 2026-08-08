@@ -9,11 +9,12 @@ interface SolutionProps {
   t: Strings;
 }
 
-// One relevant image per step: 1. taking a photo  2. Zadoc analyzing skin
-// 3. discovering the right oils
+// One relevant image per step: 1. taking a photo (phone camera app open)
+// 2. Zadoc analyzing skin (binary/data visual) 3. discovering the right
+// oils (unchanged — bottles)
 const IMAGES = [
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=560&h=700&fit=crop&crop=faces&q=80',
-  'https://images.unsplash.com/photo-1747303969063-3b90bcb3942e?w=560&h=700&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1424798985931-3325521d26e6?w=560&h=700&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=560&h=700&fit=crop&q=80',
   'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=560&h=700&fit=crop&q=80',
 ];
 
@@ -47,9 +48,9 @@ export default function Solution({ t }: SolutionProps) {
         />
 
         <motion.div
-          className="flex gap-5 px-6 sm:gap-6 sm:px-10"
+          className="no-scrollbar flex gap-5 overflow-x-auto px-6 sm:gap-6 sm:px-10"
           animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 26, ease: 'linear', repeat: Infinity }}
+          transition={{ duration: 14, ease: 'linear', repeat: Infinity }}
         >
           {track.map((step, i) => (
             <div

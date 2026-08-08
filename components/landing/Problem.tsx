@@ -47,9 +47,9 @@ export default function Problem({ t }: ProblemProps) {
         />
 
         <motion.div
-          className="flex gap-5 px-6 sm:gap-6 sm:px-10"
+          className="no-scrollbar flex gap-5 overflow-x-auto px-6 sm:gap-6 sm:px-10"
           animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 36, ease: 'linear', repeat: Infinity }}
+          transition={{ duration: 18, ease: 'linear', repeat: Infinity }}
         >
           {track.map((card, i) => (
             <div

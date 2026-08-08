@@ -9,16 +9,17 @@ interface PhotoShowcaseProps {
   t: Strings;
 }
 
-// 7 related images that slide continuously — swap these for real product /
-// skin-analysis photography whenever you have it.
+// 7 oil-only images that slide continuously — every shot here is a bottle,
+// dropper, or the oil itself, never a face or generic skincare-routine
+// photo, so the row stays strictly on-topic with "what oil fits your skin".
 const IMAGES = [
-  { src: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&h=650&fit=crop&q=80', alt: 'Natural oil being applied to skin' },
-  { src: 'https://images.unsplash.com/photo-1747303969063-3b90bcb3942e?w=500&h=650&fit=crop&q=80', alt: 'Skincare serum being poured from a dropper bottle' },
-  { src: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&h=650&fit=crop&q=80', alt: 'Several skincare oil bottles lined up' },
-  { src: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=500&h=650&fit=crop&crop=faces&q=80', alt: 'Woman with clear, healthy skin' },
-  { src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&h=650&fit=crop&crop=faces&q=80', alt: 'Woman with a glowing skincare routine' },
-  { src: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&h=650&fit=crop&crop=faces&q=80', alt: 'Close-up of healthy facial skin' },
-  { src: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&h=650&fit=crop&crop=faces&q=80', alt: 'Person with a skincare oil routine' },
+  { src: 'https://images.unsplash.com/photo-1573461160327-b450ce3d8e7f?w=500&h=650&fit=crop&q=80', alt: 'Person holding an oil dropper' },
+  { src: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=500&h=650&fit=crop&q=80', alt: 'Person holding an amber glass oil bottle' },
+  { src: 'https://images.unsplash.com/photo-1633423411797-9a7317784d2b?w=500&h=650&fit=crop&q=80', alt: 'Dropper bottle filled with facial oil' },
+  { src: 'https://images.unsplash.com/photo-1608571424266-edeb9bbefdec?w=500&h=650&fit=crop&q=80', alt: 'Brown glass oil bottle on a table' },
+  { src: 'https://images.unsplash.com/photo-1699373383910-6f9cf75ee50a?w=500&h=650&fit=crop&q=80', alt: 'Oil bottle next to a tube of oil' },
+  { src: 'https://images.unsplash.com/photo-1621958180356-7a955e56525c?w=500&h=650&fit=crop&q=80', alt: 'Yellow and white glass oil bottle' },
+  { src: 'https://images.unsplash.com/photo-1573575155376-b5010099301b?w=500&h=650&fit=crop&q=80', alt: 'Person holding a small clear oil dropper bottle' },
 ];
 
 export default function PhotoShowcase({ t }: PhotoShowcaseProps) {
@@ -42,10 +43,12 @@ export default function PhotoShowcase({ t }: PhotoShowcaseProps) {
           className="pointer-events-none absolute inset-y-0 right-0 z-10 w-14 bg-gradient-to-l from-zadoc-background to-transparent sm:w-32"
         />
 
+        {/* no-scrollbar keeps the row usable by drag/swipe/trackpad while the
+            automatic marquee animation still runs underneath */}
         <motion.div
-          className="flex gap-4 sm:gap-6"
+          className="no-scrollbar flex gap-4 overflow-x-auto sm:gap-6"
           animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 30, ease: 'linear', repeat: Infinity }}
+          transition={{ duration: 16, ease: 'linear', repeat: Infinity }}
         >
           {track.map((img, i) => (
             <div
