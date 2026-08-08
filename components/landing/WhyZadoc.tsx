@@ -1,5 +1,6 @@
-import { Sparkles, Leaf, PiggyBank } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import Reveal from './Reveal';
+import WhyZadocLoop from './WhyZadocLoop';
 import type { Strings } from '@/lib/language';
 
 interface WhyZadocProps {
@@ -7,16 +8,10 @@ interface WhyZadocProps {
 }
 
 export default function WhyZadoc({ t }: WhyZadocProps) {
-  const cards = [
-    { icon: Sparkles, title: t.why.card1title, body: t.why.card1body },
-    { icon: Leaf, title: t.why.card2title, body: t.why.card2body },
-    { icon: PiggyBank, title: t.why.card3title, body: t.why.card3body },
-  ];
-
   return (
     <section className="bg-white px-6 py-16 sm:px-10 sm:py-24">
-      <div className="mx-auto max-w-5xl">
-        <Reveal className="mb-12 max-w-lg sm:mb-16">
+      <div className="mx-auto max-w-2xl">
+        <Reveal className="mb-10 text-center sm:mb-12">
           <span className="text-sm font-medium uppercase tracking-wide text-zadoc-muted">
             {t.why.eyebrow}
           </span>
@@ -25,24 +20,9 @@ export default function WhyZadoc({ t }: WhyZadocProps) {
           </h2>
         </Reveal>
 
-        <div className="grid gap-5 sm:grid-cols-3 sm:gap-6">
-          {cards.map((card, i) => {
-            const Icon = card.icon;
-            return (
-              <Reveal key={card.title} delay={i * 0.1}>
-                <div className="h-full rounded-card border border-zadoc-border bg-zadoc-background p-7">
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-zadoc-success/10">
-                    <Icon size={22} className="text-zadoc-success" strokeWidth={1.75} />
-                  </div>
-                  <h3 className="text-lg font-semibold tracking-tight text-zadoc-foreground">
-                    {card.title}
-                  </h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-zadoc-muted">{card.body}</p>
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
+        <Reveal delay={0.1}>
+          <WhyZadocLoop bullets={t.why.bullets} icon={CheckCircle2} />
+        </Reveal>
       </div>
     </section>
   );

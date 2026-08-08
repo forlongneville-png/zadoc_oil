@@ -31,15 +31,20 @@ const config: Config = {
       boxShadow: {
         card: '0 1px 2px rgba(17, 17, 17, 0.04), 0 8px 24px -12px rgba(17, 17, 17, 0.08)',
       },
-      keyframes: {
+   keyframes: {
         'fade-scale': {
           '0%': { opacity: '0.4', transform: 'scale(0.96)' },
           '50%': { opacity: '1', transform: 'scale(1)' },
           '100%': { opacity: '0.4', transform: 'scale(0.96)' },
         },
+        'text-shimmer': {
+          '0%': { backgroundPosition: '0% 50%' },
+          '100%': { backgroundPosition: '200% 50%' },
+        },
       },
       animation: {
         'fade-scale': 'fade-scale 1.8s ease-in-out infinite',
+        'text-shimmer': 'text-shimmer 3s linear infinite',
       },
     },
   },

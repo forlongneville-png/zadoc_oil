@@ -1,0 +1,23 @@
+# Zadoc
+
+> Zadoc is a skincare app for Cameroon and francophone Africa. A user takes
+> one photo of their face, and Zadoc builds a skin profile (type and
+> condition) using AI vision analysis, then recommends which natural oils
+> genuinely suit that skin and which to avoid.
+
+## Key facts
+- Zadoc replaces guesswork and influencer-driven oil picks with a
+  photo-based skin profile.
+- Unlocking a full profile costs a small one-time fee, paid via mobile
+  money (Fapshi).
+- Zadoc is not a medical service and does not diagnose skin conditions —
+  it recommends skincare oils based on a general skin-type read.
+- Built and operated by Terabyte, based in Buea, Cameroon.
+
+## Primary use case
+Someone unsure which face oil (argan, rosehip, jojoba, marula, etc.) fits
+their skin, who wants an answer faster and cheaper than a dermatology
+visit.
+
+## Links
+- Website: https://zadoc.online

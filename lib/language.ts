@@ -28,10 +28,21 @@ export function setLanguage(lang: Lang) {
 
 // ---- String tables -------------------------------------------------------
 
+export interface ProblemItem {
+  title: string;
+  stat: string;
+  statLabel: string;
+}
+
 export interface Strings {
   nav: { getStarted: string };
-  hero: { headline: string; subtext: string; cta: string };
-  problem: { eyebrow: string; title: string; body: string; stat1: string; stat2: string };
+  hero: { headlinePrefix: string; headlineHighlight: string; subtext: string; cta: string };
+  showcase: { question: string };
+  problem: {
+    eyebrow: string;
+    title: string;
+    items: ProblemItem[];
+  };
   solution: {
     eyebrow: string;
     title: string;
@@ -42,16 +53,7 @@ export interface Strings {
     step3title: string;
     step3body: string;
   };
-  why: {
-    eyebrow: string;
-    title: string;
-    card1title: string;
-    card1body: string;
-    card2title: string;
-    card2body: string;
-    card3title: string;
-    card3body: string;
-  };
+  why: { eyebrow: string; title: string; bullets: string[] };
   social: { eyebrow: string; title: string };
   finalCta: { title: string; subtext: string; cta: string };
   authSheet: {
@@ -71,18 +73,44 @@ export const strings: Record<Lang, Strings> = {
       getStarted: 'Get Started',
     },
     hero: {
-      headline: 'Know which oil suits your skin.',
-      subtext:
-        'Take a photo of your face and let Zadoc help you discover oils that fit your skin profile — so you stop wasting money on products that may not be right for you.',
+      headlinePrefix: 'Know which',
+      headlineHighlight: 'oil suits your skin.',
+      subtext: 'Stop wasting money on products that may not be right for you.',
       cta: 'Get Started',
+    },
+    showcase: {
+      question: 'What oil really fits your skin type?',
     },
     problem: {
       eyebrow: 'The problem',
-      title: 'Most oils are picked by guesswork, not by skin.',
-      body:
-        'Shelves are full of promising bottles — argan, rosehip, jojoba, marula. Without knowing your actual skin profile, it is nearly impossible to tell which one will help and which one will sit unused in a drawer.',
-      stat1: 'Bottles bought on a whim',
-      stat2: 'Never finish the bottle',
+      title: 'Why most people never find the right oil',
+      items: [
+        {
+          title: 'Most oils are picked by guesswork, not by skin.',
+          stat: '70%',
+          statLabel: 'of bottles are bought on a whim',
+        },
+        {
+          title: "Most people copy an influencer's routine instead of their own skin.",
+          stat: '6 in 10',
+          statLabel: 'follow a trend, not their skin type',
+        },
+        {
+          title: 'A single dermatologist visit can cost more than months of skincare.',
+          stat: '25,000 FCFA+',
+          statLabel: 'average consultation fee',
+        },
+        {
+          title: "Booking a dermatologist can take weeks you don't have.",
+          stat: '2–4 wks',
+          statLabel: 'average appointment wait',
+        },
+        {
+          title: 'Skin changes with weather, stress and age — generic advice does not.',
+          stat: 'Always',
+          statLabel: 'changing, rarely reassessed',
+        },
+      ],
     },
     solution: {
       eyebrow: 'How it works',
@@ -97,12 +125,12 @@ export const strings: Record<Lang, Strings> = {
     why: {
       eyebrow: 'Why Zadoc',
       title: 'Built to save you money, not spend it',
-      card1title: 'Know your skin profile',
-      card1body: 'A clear read on your skin type and condition, from a single photo.',
-      card2title: 'Find better-suited oils',
-      card2body: 'Recommendations matched to your profile, not a generic routine.',
-      card3title: 'Stop wasting money',
-      card3body: 'Buy what actually works for your skin — skip what does not.',
+      bullets: [
+        'Get an answer in minutes, not weeks.',
+        'One profile for every member of the family.',
+        'A fraction of the cost of a dermatology visit.',
+        'Less energy spent guessing, less stress.',
+      ],
     },
     social: {
       eyebrow: 'Hear it from creators',
@@ -130,18 +158,44 @@ export const strings: Record<Lang, Strings> = {
       getStarted: 'Commencer',
     },
     hero: {
-      headline: 'Découvrez l\u2019huile faite pour votre peau.',
-      subtext:
-        'Prenez une photo de votre visage et laissez Zadoc vous aider à découvrir les huiles adaptées à votre profil de peau — pour arrêter de dépenser dans des produits qui ne vous conviennent peut-être pas.',
+      headlinePrefix: 'Découvrez',
+      headlineHighlight: 'l\u2019huile faite pour votre peau.',
+      subtext: 'Arrêtez de dépenser dans des produits qui ne vous conviennent peut-être pas.',
       cta: 'Commencer',
+    },
+    showcase: {
+      question: 'Quelle huile correspond vraiment à votre type de peau ?',
     },
     problem: {
       eyebrow: 'Le problème',
-      title: 'La plupart des huiles sont choisies au hasard, pas selon la peau.',
-      body:
-        'Les rayons débordent de flacons prometteurs — argan, rose musquée, jojoba, marula. Sans connaître votre profil de peau réel, il est presque impossible de savoir laquelle aidera vraiment et laquelle restera oubliée dans un tiroir.',
-      stat1: 'Flacons achetés sur un coup de tête',
-      stat2: 'Jamais terminés',
+      title: 'Pourquoi la bonne huile reste introuvable',
+      items: [
+        {
+          title: 'La plupart des huiles sont choisies au hasard, pas selon la peau.',
+          stat: '70%',
+          statLabel: 'des flacons achetés sur un coup de tête',
+        },
+        {
+          title: "Beaucoup copient la routine d\u2019un influenceur plutôt que d\u2019écouter leur peau.",
+          stat: '6 sur 10',
+          statLabel: 'suivent une tendance, pas leur type de peau',
+        },
+        {
+          title: 'Une seule visite chez le dermatologue peut coûter plus cher que des mois de soins.',
+          stat: '25 000 FCFA+',
+          statLabel: 'frais de consultation moyen',
+        },
+        {
+          title: 'Prendre rendez-vous chez le dermatologue peut prendre des semaines.',
+          stat: '2 à 4 sem.',
+          statLabel: 'délai d\u2019attente moyen',
+        },
+        {
+          title: 'La peau change avec la météo, le stress et l\u2019âge — pas les conseils génériques.',
+          stat: 'Toujours',
+          statLabel: 'en changement, rarement réévaluée',
+        },
+      ],
     },
     solution: {
       eyebrow: 'Comment ça marche',
@@ -156,12 +210,12 @@ export const strings: Record<Lang, Strings> = {
     why: {
       eyebrow: 'Pourquoi Zadoc',
       title: 'Conçu pour vous faire économiser, pas dépenser',
-      card1title: 'Connaissez votre profil de peau',
-      card1body: 'Une lecture claire de votre type et état de peau, à partir d\u2019une seule photo.',
-      card2title: 'Trouvez des huiles mieux adaptées',
-      card2body: 'Des recommandations selon votre profil, pas une routine générique.',
-      card3title: 'Arrêtez de gaspiller votre argent',
-      card3body: 'Achetez ce qui fonctionne vraiment pour votre peau — évitez le reste.',
+      bullets: [
+        'Une réponse en quelques minutes, pas en semaines.',
+        'Un profil pour chaque membre de la famille.',
+        'Une fraction du coût d\u2019une visite chez le dermatologue.',
+        'Moins d\u2019énergie à deviner, moins de stress.',
+      ],
     },
     social: {
       eyebrow: 'Ce qu\u2019en disent les créateurs',
