@@ -1,7 +1,6 @@
 'use client';
 
-import { ChevronRight, MessageCircle, ShieldCheck, Sparkles } from 'lucide-react';
-import Image from 'next/image';
+import { ChevronRight, MessageCircle, ShieldCheck, Sparkles, User } from 'lucide-react';
 import type { ZadocUser } from '@/types/zadoc';
 import BottomSheet from './BottomSheet';
 
@@ -28,13 +27,8 @@ export default function AccountSheet({
   return (
     <BottomSheet open={open} onClose={onClose} title="Account">
       <div className="flex flex-col items-center text-center gap-3 mb-6">
-        <div className="relative h-20 w-20 overflow-hidden rounded-full border border-zadoc-border bg-white">
-          <Image
-            src={`https://i.pravatar.cc/160?u=${user.id}`}
-            alt={user.name}
-            fill
-            className="object-cover"
-          />
+        <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-zadoc-border bg-white">
+          <User size={34} className="text-zadoc-muted" strokeWidth={1.75} />
         </div>
         <div>
           <p className="text-base font-semibold">{user.name}</p>
@@ -43,7 +37,7 @@ export default function AccountSheet({
       </div>
 
       <div className="flex flex-col gap-2">
-        <a
+        
           href={SUPPORT_URL}
           target="_blank"
           rel="noopener noreferrer"
