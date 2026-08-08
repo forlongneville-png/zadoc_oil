@@ -1,0 +1,88 @@
+'use client';
+
+import { ChevronRight, MessageCircle, ShieldCheck, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import type { ZadocUser } from '@/types/zadoc';
+import BottomSheet from './BottomSheet';
+
+const SUPPORT_URL =
+  'https://wa.me/237683473299?text=Hello%20Zadoc%20support%2C%20I%20need%20help%20with%20my%20account';
+
+interface AccountSheetProps {
+  open: boolean;
+  onClose: () => void;
+  user: ZadocUser;
+  onOpenCreatorDashboard: () => void;
+  onOpenAdminPanel: () => void;
+  onRequestLogout: () => void;
+}
+
+export default function AccountSheet({
+  open,
+  onClose,
+  user,
+  onOpenCreatorDashboard,
+  onOpenAdminPanel,
+  onRequestLogout,
+}: AccountSheetProps) {
+  return (
+    <BottomSheet open={open} onClose={onClose} title="Account">
+      <div className="flex flex-col items-center text-center gap-3 mb-6">
+        <div className="relative h-20 w-20 overflow-hidden rounded-full border border-zadoc-border bg-white">
+          <Image
+            src={`https://i.pravatar.cc/160?u=${user.id}`}
+            alt={user.name}
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div>
+          <p className="text-base font-semibold">{user.name}</p>
+          <p className="text-sm text-zadoc-muted">{user.phone}</p>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <a
+          href={SUPPORT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 rounded-zadoc-sm border border-zadoc-border bg-white px-4 py-3.5 hover:bg-black/5 transition-colors"
+        >
+          <MessageCircle size={18} className="text-zadoc-muted" />
+          <span className="flex-1 text-left text-sm font-medium">Customer Support</span>
+          <ChevronRight size={16} className="text-zadoc-muted" />
+        </a>
+
+        {user.role === 'creator' && (
+          <button
+            onClick={onOpenCreatorDashboard}
+            className="flex items-center gap-3 rounded-zadoc-sm border border-zadoc-border bg-white px-4 py-3.5 hover:bg-black/5 transition-colors"
+          >
+            <Sparkles size={18} className="text-zadoc-muted" />
+            <span className="flex-1 text-left text-sm font-medium">Creator Dashboard</span>
+            <ChevronRight size={16} className="text-zadoc-muted" />
+          </button>
+        )}
+
+        {user.role === 'admin' && (
+          <button
+            onClick={onOpenAdminPanel}
+            className="flex items-center gap-3 rounded-zadoc-sm border border-zadoc-border bg-white px-4 py-3.5 hover:bg-black/5 transition-colors"
+          >
+            <ShieldCheck size={18} className="text-zadoc-muted" />
+            <span className="flex-1 text-left text-sm font-medium">Admin Panel</span>
+            <ChevronRight size={16} className="text-zadoc-muted" />
+          </button>
+        )}
+
+        <button
+          onClick={onRequestLogout}
+          className="mt-2 rounded-zadoc-sm px-4 py-3.5 text-sm font-medium text-zadoc-avoid hover:bg-zadoc-avoid/5 transition-colors"
+        >
+          Log out
+        </button>
+      </div>
+    </BottomSheet>
+  );
+}
