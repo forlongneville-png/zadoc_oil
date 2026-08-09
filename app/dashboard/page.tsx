@@ -11,7 +11,7 @@ import EmptyState from '@/components/dashboard/EmptyState';
 import LogoutConfirmModal from '@/components/dashboard/LogoutConfirmModal';
 import ProfileBody from '@/components/dashboard/ProfileBody';
 import ProfileSwitcher from '@/components/dashboard/ProfileSwitcher';
-import { CreatorDashboardSheet } from '@/components/creator/CreatorDashboardSheet';
+ 
 import { hasAnyCompletedProfile, needsScanResume } from '@/lib/profiles/helpers';
 import type { ZadocProfile, ZadocUser } from '@/types/zadoc';
 
@@ -27,7 +27,7 @@ export default function DashboardPage() {
 
   const [accountOpen, setAccountOpen] = useState(false);
   const [addProfileOpen, setAddProfileOpen] = useState(false);
-  const [creatorDashboardOpen, setCreatorDashboardOpen] = useState(false);
+   
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
   const [scanOpen, setScanOpen] = useState(false);
@@ -159,23 +159,15 @@ export default function DashboardPage() {
 
       <DashboardFooter />
 
-      <AccountSheet
-        open={accountOpen}
-        onClose={() => setAccountOpen(false)}
-        user={user}
-        onOpenCreatorDashboard={() => {
-          setAccountOpen(false);
-          setCreatorDashboardOpen(true);
-        }}
-        onOpenAdminPanel={() => {
-          setAccountOpen(false);
-          window.location.href = '/admin';
-        }}
-        onRequestLogout={() => {
-          setAccountOpen(false);
-          setLogoutConfirmOpen(true);
-        }}
-      />
+    <AccountSheet
+  open={accountOpen}
+  onClose={() => setAccountOpen(false)}
+  user={user}
+  onRequestLogout={() => {
+    setAccountOpen(false);
+    setLogoutConfirmOpen(true);
+  }}
+/>
 
       <AddProfileSheet
         open={addProfileOpen}
@@ -183,10 +175,6 @@ export default function DashboardPage() {
         onSubmit={handleAddProfile}
       />
 
-      {/* Gated client-side for UX only — the real authorization check lives
-          server-side in the /api/creator/* and /api/admin/* routes, which
-          re-derive the role from the session, never from this button being clicked. */}
-      <CreatorDashboardSheet open={creatorDashboardOpen} onClose={() => setCreatorDashboardOpen(false)} />
 
       <LogoutConfirmModal
         open={logoutConfirmOpen}

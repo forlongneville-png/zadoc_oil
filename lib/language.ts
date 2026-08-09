@@ -54,7 +54,7 @@ export interface Strings {
     step3body: string;
   };
   why: { eyebrow: string; title: string; bullets: string[] };
-  social: { eyebrow: string; title: string };
+   
   finalCta: { title: string; subtext: string; cta: string };
   authSheet: {
     login: string;
@@ -131,10 +131,6 @@ export const strings: Record<Lang, Strings> = {
         'A fraction of the cost of a dermatology visit.',
         'Less energy spent guessing, less stress.',
       ],
-    },
-    social: {
-      eyebrow: 'Hear it from creators',
-      title: 'People who tried Zadoc first',
     },
     finalCta: {
       title: 'Ready to know your skin?',
@@ -217,10 +213,7 @@ export const strings: Record<Lang, Strings> = {
         'Moins d\u2019énergie à deviner, moins de stress.',
       ],
     },
-    social: {
-      eyebrow: 'Ce qu\u2019en disent les créateurs',
-      title: 'Ils ont testé Zadoc avant vous',
-    },
+  
     finalCta: {
       title: 'Prêt·e à connaître votre peau ?',
       subtext: 'Une seule photo suffit pour commencer.',

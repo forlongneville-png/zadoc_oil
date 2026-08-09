@@ -5,8 +5,8 @@ import { getPaymentByExternalId, getPaymentByProviderTransactionId, updatePaymen
 
 // This route is the single source of truth for payment status — same shape
 // as Piece 6's mock, just backed by real Supabase tables and real Fapshi
-// signature verification. Unlocking the profile and writing creator_earnings
-// happens automatically via the trg_payments_successful DB trigger
+// signature verification. Unlocking the profile happens automatically via
+// the trg_payments_successful DB trigger
 // (zadoc_schema.sql) the moment we flip a payment's status to 'successful' —
 // this handler never re-implements that logic, just the idempotency guard.
 

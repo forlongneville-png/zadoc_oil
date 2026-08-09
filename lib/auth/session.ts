@@ -23,7 +23,7 @@ export async function getSession(): Promise<ZadocUser | null> {
 
   const { data, error } = await supabaseAdmin
     .from('users')
-    .select('id, name, phone, role, language, created_at')
+    .select('id, name, phone, language, created_at')
     .eq('id', userId)
     .is('deleted_at', null)
     .maybeSingle();

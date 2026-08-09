@@ -8,15 +8,15 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/dashboard', '/admin', '/api', '/profile'],
+        disallow: ['/dashboard', '/api', '/profile'],
       },
       // Explicitly welcome AI answer-engine crawlers (GEO) onto the public
       // marketing pages — they respect these tokens even though Google's
       // generic rule above already covers them.
-      { userAgent: 'GPTBot', allow: '/', disallow: ['/dashboard', '/admin', '/api', '/profile'] },
-      { userAgent: 'PerplexityBot', allow: '/', disallow: ['/dashboard', '/admin', '/api', '/profile'] },
-      { userAgent: 'ClaudeBot', allow: '/', disallow: ['/dashboard', '/admin', '/api', '/profile'] },
-      { userAgent: 'Google-Extended', allow: '/', disallow: ['/dashboard', '/admin', '/api', '/profile'] },
+      { userAgent: 'GPTBot', allow: '/', disallow: ['/dashboard', '/api', '/profile'] },
+      { userAgent: 'PerplexityBot', allow: '/', disallow: ['/dashboard', '/api', '/profile'] },
+      { userAgent: 'ClaudeBot', allow: '/', disallow: ['/dashboard', '/api', '/profile'] },
+      { userAgent: 'Google-Extended', allow: '/', disallow: ['/dashboard', '/api', '/profile'] },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,

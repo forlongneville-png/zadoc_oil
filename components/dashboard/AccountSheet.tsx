@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronRight, MessageCircle, ShieldCheck, Sparkles, User } from 'lucide-react';
+import { ChevronRight, MessageCircle, User } from 'lucide-react';
 import type { ZadocUser } from '@/types/zadoc';
 import BottomSheet from './BottomSheet';
 
@@ -11,19 +11,10 @@ interface AccountSheetProps {
   open: boolean;
   onClose: () => void;
   user: ZadocUser;
-  onOpenCreatorDashboard: () => void;
-  onOpenAdminPanel: () => void;
   onRequestLogout: () => void;
 }
 
-export default function AccountSheet({
-  open,
-  onClose,
-  user,
-  onOpenCreatorDashboard,
-  onOpenAdminPanel,
-  onRequestLogout,
-}: AccountSheetProps) {
+export default function AccountSheet({ open, onClose, user, onRequestLogout }: AccountSheetProps) {
   return (
     <BottomSheet open={open} onClose={onClose} title="Account">
       <div className="flex flex-col items-center text-center gap-3 mb-6">
@@ -37,7 +28,7 @@ export default function AccountSheet({
       </div>
 
       <div className="flex flex-col gap-2">
-        <a
+        
           href={SUPPORT_URL}
           target="_blank"
           rel="noopener noreferrer"
@@ -47,28 +38,6 @@ export default function AccountSheet({
           <span className="flex-1 text-left text-sm font-medium">Customer Support</span>
           <ChevronRight size={16} className="text-zadoc-muted" />
         </a>
-
-        {user.role === 'creator' && (
-          <button
-            onClick={onOpenCreatorDashboard}
-            className="flex items-center gap-3 rounded-zadoc-sm border border-zadoc-border bg-white px-4 py-3.5 hover:bg-black/5 transition-colors"
-          >
-            <Sparkles size={18} className="text-zadoc-muted" />
-            <span className="flex-1 text-left text-sm font-medium">Creator Dashboard</span>
-            <ChevronRight size={16} className="text-zadoc-muted" />
-          </button>
-        )}
-
-        {user.role === 'admin' && (
-          <button
-            onClick={onOpenAdminPanel}
-            className="flex items-center gap-3 rounded-zadoc-sm border border-zadoc-border bg-white px-4 py-3.5 hover:bg-black/5 transition-colors"
-          >
-            <ShieldCheck size={18} className="text-zadoc-muted" />
-            <span className="flex-1 text-left text-sm font-medium">Admin Panel</span>
-            <ChevronRight size={16} className="text-zadoc-muted" />
-          </button>
-        )}
 
         <button
           onClick={onRequestLogout}

@@ -1,10 +1,10 @@
 import type { Payment, PaymentStatus } from '@/types/zadoc';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
-// Real Supabase-backed replacement for Piece 6's lib/mock/store.ts +
-// lib/mock/payments.ts. Unlock + creator_earnings are handled automatically
-// by the trg_payments_successful DB trigger (see zadoc_schema.sql) whenever
-// a payment row transitions to status = 'successful' — this module never
+ // Real Supabase-backed replacement for Piece 6's lib/mock/store.ts +
+// lib/mock/payments.ts. The profile unlock is handled automatically by the
+// trg_payments_successful DB trigger (see zadoc_schema.sql) whenever a
+// payment row transitions to status = 'successful' — this module never
 // duplicates that logic, it only reads/writes the payments table itself.
 
 export async function createPayment(params: {
