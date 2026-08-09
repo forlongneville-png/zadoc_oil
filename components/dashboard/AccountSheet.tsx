@@ -28,7 +28,7 @@ export default function AccountSheet({ open, onClose, user, onRequestLogout }: A
       </div>
 
       <div className="flex flex-col gap-2">
-        
+        <a
           href={SUPPORT_URL}
           target="_blank"
           rel="noopener noreferrer"
