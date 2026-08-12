@@ -1,8 +1,9 @@
+// ROUTE: components/payment/UnlockModal.tsx
 'use client';
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Droplet, Loader2 } from 'lucide-react';
+import { X, Droplet, Loader2, CheckCircle2 } from 'lucide-react';
 
 interface UnlockModalProps {
   open: boolean;
@@ -10,11 +11,12 @@ interface UnlockModalProps {
   profileId: string;
   userId: string;
   onCheckoutReady: (checkoutUrl: string, paymentId: string) => void;
+  onExempt: () => void;
 }
 
 const PRICE_LABEL = '129 FCFA';
 
-export function UnlockModal({ open, onClose, profileId, userId, onCheckoutReady }: UnlockModalProps) {
+export function UnlockModal({ open, onClose, profileId, userId, onCheckoutReady, onExempt }: UnlockModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,6 +31,13 @@ export function UnlockModal({ open, onClose, profileId, userId, onCheckoutReady 
       });
       if (!res.ok) throw new Error('Could not start payment');
       const data = await res.json();
+
+      if (data.exempt) {
+        setLoading(false);
+        onExempt();
+        return;
+      }
+
       onCheckoutReady(data.checkoutUrl, data.payment.id);
     } catch {
       setError('Something went wrong starting your payment. Please try again.');
@@ -102,5 +111,17 @@ export function UnlockModal({ open, onClose, profileId, userId, onCheckoutReady 
         </>
       )}
     </AnimatePresence>
+  );
+}
+
+export function UnlockedBanner() {
+  return (
+    <div className="zadoc-card flex items-center gap-3">
+      <CheckCircle2 size={22} className="text-zadoc-success" />
+      <div>
+        <p className="font-medium">Unlocked</p>
+        <p className="text-sm text-zadoc-muted">Your complete oil guide is ready.</p>
+      </div>
+    </div>
   );
 }

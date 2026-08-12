@@ -1,3 +1,4 @@
+// ROUTE: components/results/ResultsView.tsx  (only the UnlockModal usage changed — rest is identical)
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
@@ -13,14 +14,6 @@ import { DownloadReportButton } from '@/components/payment/DownloadReportButton'
 import type { RecommendationListItem } from '@/lib/types';
 import type { SkinAnalysis, ZadocProfile } from '@/types/zadoc';
 
-// Assembly glue: composes Piece 5's real results components (ProfileCard,
-// OilSection, FloatingCTA, ProductSheet) with Piece 6's real payment
-// components (UnlockModal, PaymentStatusPanel, DownloadReportButton), backed
-// by real data from GET /api/profiles/[id]. This is what replaces both
-// Piece 4's "analysis complete" placeholder screen and Piece 3's
-// "Results view renders here (Piece 5)" placeholder — no single piece owned
-// a component that combined all of this, so it lives here as new glue
-// rather than inside any one piece's owned files.
 export function ResultsView({ profileId, onClose }: { profileId: string; onClose?: () => void }) {
   const router = useRouter();
 
@@ -31,9 +24,6 @@ export function ResultsView({ profileId, onClose }: { profileId: string; onClose
 
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [detailItem, setDetailItem] = useState<RecommendationListItem | null>(null);
-  // Read client-side only (avoids the useSearchParams()-needs-Suspense build
-  // constraint) — this only ever matters after Fapshi redirects the browser
-  // back with ?payment=..., which is inherently a client-side navigation.
   const [pendingPaymentId, setPendingPaymentId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -129,6 +119,11 @@ export function ResultsView({ profileId, onClose }: { profileId: string; onClose
         onCheckoutReady={(checkoutUrl) => {
           setUnlockOpen(false);
           window.location.href = checkoutUrl; // hand off to Fapshi's real hosted checkout
+        }}
+        onExempt={() => {
+          // Free-forever user — unlocked instantly, no Fapshi round-trip.
+          setUnlockOpen(false);
+          refetch();
         }}
       />
 

@@ -1,3 +1,4 @@
+// ROUTE: lib/auth/users-db.ts
 import bcrypt from 'bcryptjs';
 import type { ZadocUser } from '@/types/zadoc';
 import { supabaseAdmin } from '@/lib/supabase/admin';
@@ -31,12 +32,18 @@ export async function createUser(params: {
   name: string;
   phone: string; // already normalized, e.g. +2376XXXXXXXX
   pin: string; // plaintext, hashed here only — never persisted or logged as-is
+  referredByCode?: string | null;
 }): Promise<ZadocUser> {
   const pin_hash = await bcrypt.hash(params.pin, SALT_ROUNDS);
 
   const { data, error } = await supabaseAdmin
     .from('users')
-    .insert({ name: params.name, phone: params.phone, pin_hash })
+    .insert({
+      name: params.name,
+      phone: params.phone,
+      pin_hash,
+      referred_by_code: params.referredByCode ?? null,
+    })
     .select('id, name, phone, language, created_at')
     .single();
 

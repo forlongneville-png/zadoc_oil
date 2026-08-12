@@ -1,3 +1,4 @@
+// ROUTE: lib/profiles/db.ts
 import type { ZadocProfile } from '@/types/zadoc';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { signProfileImageUrl } from '@/lib/storage/profile-images';
@@ -97,4 +98,10 @@ export async function completeProfileAnalysis(params: {
     .eq('id', params.profileId);
 
   if (error) throw new Error(error.message);
+}
+
+/** Admin-exempt unlock path — no payment row created at all. Called only
+ * from app/api/payments/create/route.ts after confirming users.is_exempt. */
+export async function unlockProfileDirectly(profileId: string): Promise<void> {
+  await supabaseAdmin.from('profiles').update({ is_unlocked: true }).eq('id', profileId);
 }

@@ -1,3 +1,4 @@
+// ROUTE: app/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -83,8 +84,7 @@ export default function Home() {
   }, []);
 
   // If already logged in, skip the landing pitch and go straight to the
-  // dashboard (mirrors Piece 2's original "already authenticated" redirect,
-  // now backed by the real /api/auth/me session check).
+  // dashboard, backed by the real /api/auth/me session check.
   useEffect(() => {
     fetch('/api/auth/me')
       .then((r) => r.json())
@@ -93,6 +93,24 @@ export default function Home() {
       })
       .catch(() => {});
   }, [router]);
+
+  // Referral capture: if someone lands with ?ref=CODE123, remember it in a
+  // cookie so /api/auth/signup can read it later and report it to Admin.
+  // Zadoc never does anything else with this value — no lookup, no
+  // commission math, just "remember the code, forward it once at signup."
+  // First code wins for a given visit — we don't overwrite an existing
+  // cookie, so a later, unrelated ?ref= link can't hijack an earlier one.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (!ref) return;
+
+    const hasExisting = document.cookie.split('; ').some((c) => c.startsWith('zadoc_ref='));
+    if (hasExisting) return;
+
+    const THIRTY_DAYS = 60 * 60 * 24 * 30;
+    document.cookie = `zadoc_ref=${encodeURIComponent(ref)}; path=/; max-age=${THIRTY_DAYS}; SameSite=Lax`;
+  }, []);
 
   // Brief loading state while language resolves client-side — logo
   // subtly scales/fades, nothing more elaborate, per brand guidance.

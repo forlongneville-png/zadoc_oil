@@ -1,16 +1,16 @@
+// ROUTE: app/api/payments/create/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSessionUserId } from '@/lib/auth/session';
-import { getProfileForUser } from '@/lib/profiles/db';
+import { getProfileForUser, unlockProfileDirectly } from '@/lib/profiles/db';
 import { createPayment, setPaymentProviderTransactionId } from '@/lib/payments/db';
 import { fapshiInitiatePay } from '@/lib/payments/fapshi';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 const ZADOC_PRICE_FCFA = 129; // fixed one-time price, never a subscription, never taken from the client
 
 const bodySchema = z.object({
   profileId: z.string().min(1),
-  // userId is still accepted for shape-compatibility with Piece 6's UnlockModal
-  // call, but the session is the actual source of truth — see check below.
   userId: z.string().min(1).optional(),
 });
 
@@ -31,6 +31,19 @@ export async function POST(req: NextRequest) {
   // Never trust a client-supplied userId — always the session's.
   const profile = await getProfileForUser(parsed.data.profileId, sessionUserId);
   if (!profile) return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+
+  // Free-forever override, set only by Admin directly on the DB. Checked
+  // here, before any Fapshi call, per the migration's own comment.
+  const { data: userRow } = await supabaseAdmin
+    .from('users')
+    .select('is_exempt')
+    .eq('id', sessionUserId)
+    .maybeSingle();
+
+  if (userRow?.is_exempt) {
+    await unlockProfileDirectly(profile.id);
+    return NextResponse.json({ exempt: true, payment: null, checkoutUrl: null }, { status: 200 });
+  }
 
   const payment = await createPayment({
     userId: sessionUserId,

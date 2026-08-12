@@ -1,4 +1,4 @@
-// FILE PATH: components/admin/ProductUploadCard.tsx
+// ROUTE: components/admin/ProductUploadCard.tsx
 'use client';
 
 import { useState } from 'react';
@@ -53,10 +53,12 @@ export function makeBlankProduct(): ProductDraft {
 
 export function ProductUploadCard({
   draft,
+  adminPassword,
   onChange,
   onRemove,
 }: {
   draft: ProductDraft;
+  adminPassword: string;
   onChange: (next: ProductDraft) => void;
   onRemove: () => void;
 }) {
@@ -136,7 +138,11 @@ export function ProductUploadCard({
       form.append('file', img.file);
       form.append('slug', draft.slug || 'untitled');
 
-      const res = await fetch('/api/admin/products/upload-image', { method: 'POST', body: form });
+      const res = await fetch('/api/admin/products/upload-image', {
+        method: 'POST',
+        headers: { 'x-zadoc-admin-password': adminPassword },
+        body: form,
+      });
       const body = await res.json();
 
       if (!res.ok) {
@@ -182,7 +188,7 @@ export function ProductUploadCard({
 
       const res = await fetch('/api/admin/products', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-zadoc-admin-password': adminPassword },
         body: JSON.stringify(payload),
       });
       const body = await res.json();

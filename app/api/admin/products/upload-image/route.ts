@@ -1,11 +1,7 @@
-// FILE PATH: app/api/admin/products/upload-image/route.ts
+// ROUTE: app/api/admin/products/upload-image/route.ts
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-
-// No auth — internal tool. Uploads one image at a time to the PUBLIC
-// `product-images` bucket and returns the public URL, which is exactly what
-// `product_images.image_url` expects (per ZADOC_SCHEMA_REFERENCE.md — this
-// bucket is public-read, unlike the private `profile-images` bucket).
+import { isAddProductsRequestAllowed } from '@/lib/admin/auth';
 
 export const runtime = 'nodejs';
 
@@ -13,6 +9,10 @@ const MAX_BYTES = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export async function POST(request: Request) {
+  if (!isAddProductsRequestAllowed(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const form = await request.formData().catch(() => null);
   if (!form) return NextResponse.json({ error: 'Invalid form data' }, { status: 400 });
 

@@ -1,11 +1,15 @@
+// ROUTE: lib/payments/db.ts
 import type { Payment, PaymentStatus } from '@/types/zadoc';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
- // Real Supabase-backed replacement for Piece 6's lib/mock/store.ts +
+// Real Supabase-backed replacement for Piece 6's lib/mock/store.ts +
 // lib/mock/payments.ts. The profile unlock is handled automatically by the
 // trg_payments_successful DB trigger (see zadoc_schema.sql) whenever a
 // payment row transitions to status = 'successful' — this module never
 // duplicates that logic, it only reads/writes the payments table itself.
+
+const PAYMENT_COLUMNS =
+  'id, user_id, profile_id, amount, currency, status, external_id, provider_transaction_id, created_at, confirmed_at';
 
 export async function createPayment(params: {
   userId: string;
@@ -25,7 +29,7 @@ export async function createPayment(params: {
       external_id: externalId,
       status: 'created',
     })
-    .select('id, user_id, profile_id, amount, currency, status, external_id, created_at, confirmed_at')
+    .select(PAYMENT_COLUMNS)
     .single();
 
   if (error || !data) throw new Error(error?.message ?? 'Failed to create payment');
@@ -40,18 +44,14 @@ export async function setPaymentProviderTransactionId(paymentId: string, provide
 }
 
 export async function getPayment(id: string): Promise<Payment | null> {
-  const { data } = await supabaseAdmin
-    .from('payments')
-    .select('id, user_id, profile_id, amount, currency, status, external_id, created_at, confirmed_at')
-    .eq('id', id)
-    .maybeSingle();
+  const { data } = await supabaseAdmin.from('payments').select(PAYMENT_COLUMNS).eq('id', id).maybeSingle();
   return (data as Payment) ?? null;
 }
 
 export async function getPaymentByExternalId(externalId: string): Promise<Payment | null> {
   const { data } = await supabaseAdmin
     .from('payments')
-    .select('id, user_id, profile_id, amount, currency, status, external_id, created_at, confirmed_at')
+    .select(PAYMENT_COLUMNS)
     .eq('external_id', externalId)
     .maybeSingle();
   return (data as Payment) ?? null;
@@ -60,20 +60,20 @@ export async function getPaymentByExternalId(externalId: string): Promise<Paymen
 export async function getPaymentByProviderTransactionId(providerTransactionId: string): Promise<Payment | null> {
   const { data } = await supabaseAdmin
     .from('payments')
-    .select('id, user_id, profile_id, amount, currency, status, external_id, created_at, confirmed_at')
+    .select(PAYMENT_COLUMNS)
     .eq('provider_transaction_id', providerTransactionId)
     .maybeSingle();
   return (data as Payment) ?? null;
 }
 
 /** Updating status to 'successful' fires trg_payments_successful, which unlocks
- * the profile and (if referred) writes creator_earnings — automatically. */
+ * the profile automatically. */
 export async function updatePaymentStatus(id: string, status: PaymentStatus): Promise<Payment | null> {
   const { data } = await supabaseAdmin
     .from('payments')
     .update({ status })
     .eq('id', id)
-    .select('id, user_id, profile_id, amount, currency, status, external_id, created_at, confirmed_at')
+    .select(PAYMENT_COLUMNS)
     .maybeSingle();
   return (data as Payment) ?? null;
 }

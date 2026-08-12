@@ -1,3 +1,4 @@
+// ROUTE: types/zadoc.ts
 export type SkinType = 'dry' | 'oily' | 'combination' | 'normal' | 'sensitive';
 export type RecommendationType = 'best' | 'avoid';
 export type AnalysisStatus = 'empty' | 'collecting' | 'processing' | 'complete' | 'failed';
@@ -9,5 +10,4 @@ export interface ZadocProfile { id: string; user_id: string; name: string; image
 export interface SkinAnalysis { id: string; profile_id: string; image_url: string; skin_type: SkinType; skin_score: number; insights_json: string[]; created_at: string; }
 export interface Product { id: string; name: string; slug: string; description: string; category: string; benefits: string[]; usage: string; warnings: string; active: boolean; images: { image_url: string; display_order: number }[]; }
 export interface ProductRecommendation { id: string; product_id: string; skin_type: SkinType; recommendation_type: RecommendationType; rank: number; reason: string; product: Product; }
-export interface Payment { id: string; user_id: string; profile_id: string; amount: number; currency: string; status: PaymentStatus; external_id: string; created_at: string; confirmed_at: string | null; }
- 
+export interface Payment { id: string; user_id: string; profile_id: string; amount: number; currency: string; status: PaymentStatus; external_id: string; provider_transaction_id: string | null; created_at: string; confirmed_at: string | null; }

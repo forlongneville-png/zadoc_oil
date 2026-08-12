@@ -1,3 +1,4 @@
+// ROUTE: lib/payments/fapshi.ts
 import crypto from 'crypto';
 import type { Payment } from '@/types/zadoc';
 
@@ -77,4 +78,29 @@ export function verifyFapshiWebhookSignature(rawBody: string, signatureHeader: s
   } catch {
     return false;
   }
+}
+
+/**
+ * NEW — direct reconciliation check against Fapshi. Used as a self-healing
+ * fallback: if the webhook never arrives (network blip, missed retry, etc.),
+ * the status-polling endpoint calls this directly instead of waiting forever.
+ */
+export async function fapshiGetPaymentStatus(
+  transId: string
+): Promise<'created' | 'pending' | 'successful' | 'failed' | 'expired'> {
+  const apiUser = process.env.FAPSHI_API_USER;
+  const apiKey = process.env.FAPSHI_API_KEY;
+  if (!apiUser || !apiKey) throw new Error('FAPSHI_API_USER / FAPSHI_API_KEY are not set');
+
+  const res = await fetch(`${FAPSHI_BASE_URL}/payment-status/${transId}`, {
+    headers: { apiuser: apiUser, apikey: apiKey },
+  });
+  if (!res.ok) throw new Error(`Fapshi payment-status failed (${res.status})`);
+  const data = await res.json();
+  return String(data.status ?? '').toLowerCase() as
+    | 'created'
+    | 'pending'
+    | 'successful'
+    | 'failed'
+    | 'expired';
 }

@@ -1,7 +1,9 @@
+// ROUTE: app/api/webhooks/fapshi/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { verifyFapshiWebhookSignature } from '@/lib/payments/fapshi';
 import { getPaymentByExternalId, getPaymentByProviderTransactionId, updatePaymentStatus } from '@/lib/payments/db';
+import { reportPayment } from '@/lib/admin/reporting';
 
 // This route is the single source of truth for payment status — same shape
 // as Piece 6's mock, just backed by real Supabase tables and real Fapshi
@@ -51,7 +53,7 @@ export async function POST(req: NextRequest) {
 
   // Idempotency guard: once a payment is successful it is final. Repeat
   // deliveries (Fapshi retries on non-200, network blips, etc.) must not
-  // re-trigger the DB trigger's unlock/earnings logic twice.
+  // re-trigger the DB trigger's unlock logic twice.
   if (payment.status === 'successful') {
     return NextResponse.json({ ok: true, alreadyProcessed: true, payment });
   }
@@ -59,6 +61,15 @@ export async function POST(req: NextRequest) {
   const updated = await updatePaymentStatus(payment.id, normalizedStatus);
   if (!updated) {
     return NextResponse.json({ error: 'Payment not found' }, { status: 404 });
+  }
+
+  if (updated.status === 'successful') {
+    reportPayment({
+      userId: updated.user_id,
+      profileId: updated.profile_id,
+      paymentId: updated.id,
+      amount: updated.amount,
+    });
   }
 
   return NextResponse.json({ ok: true, alreadyProcessed: false, payment: updated });
