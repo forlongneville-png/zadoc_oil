@@ -7,11 +7,19 @@ import { ProductUploadCard, ProductDraft, makeBlankProduct } from '@/components/
 
 const STORAGE_KEY = 'zadoc_add_products_pw';
 
+// `undefined` = "haven't checked sessionStorage yet" (client-only, one tick).
+// `''`        = "checked — nothing saved, show the password form."
+// `string`    = "unlocked with this password."
+// These three states must stay distinguishable — collapsing "not checked
+// yet" and "checked, empty" into the same value (e.g. both `null`) is what
+// caused the page to render blank forever on any first-time visit.
 function useProductsAuth() {
-  const [password, setPassword] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | undefined>(undefined);
+
   useEffect(() => {
-    setPassword(sessionStorage.getItem(STORAGE_KEY));
+    setPassword(sessionStorage.getItem(STORAGE_KEY) ?? '');
   }, []);
+
   return {
     password,
     unlock: (pw: string) => {
@@ -57,8 +65,8 @@ export default function AddProductsPage() {
     setDrafts((prev) => [...prev, ...imported]);
   }
 
-  if (password === null) {
-    // still checking sessionStorage on mount — avoid a flash of the login form
+  if (password === undefined) {
+    // The one tick before the effect runs — genuinely nothing to show yet.
     return null;
   }
 

@@ -1,14 +1,14 @@
-// FILE PATH: app/api/admin/products/route.ts
+// ROUTE: app/api/admin/products/route.ts
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { productSchema } from '@/lib/admin/productSchema';
+import { isAddProductsRequestAllowed } from '@/lib/admin/auth';
 
-// NOTE: intentionally NO auth check, per request — this backs the internal
-// /add_products page. It writes to the DB with the service-role key, so
-// treat the route itself as sensitive: don't leave it reachable on a public
-// production domain (see the warning banner on the page).
+export async function GET(request: Request) {
+  if (!isAddProductsRequestAllowed(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-export async function GET() {
   const { data, error } = await supabaseAdmin
     .from('products')
     .select(
@@ -24,6 +24,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!isAddProductsRequestAllowed(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const body = await request.json().catch(() => null);
   const parsed = productSchema.safeParse(body);
 
@@ -36,8 +40,6 @@ export async function POST(request: Request) {
 
   const { images, recommendations, ...productFields } = parsed.data;
 
-  // Slug is UNIQUE in the DB — check first so we can give a clear error
-  // instead of a raw Postgres constraint message.
   const { data: existing } = await supabaseAdmin
     .from('products')
     .select('id')
@@ -66,8 +68,6 @@ export async function POST(request: Request) {
       .insert(images.map((img) => ({ ...img, product_id: productId })));
 
     if (imagesError) {
-      // Product row exists but images didn't attach — surface the id so the
-      // caller can retry just the images instead of duplicating the product.
       return NextResponse.json(
         { error: `Product created but images failed: ${imagesError.message}`, productId },
         { status: 207 }
