@@ -16,6 +16,7 @@ interface UserRow {
   pin_hash: string;
   language: ZadocUser['language'];
   created_at: string;
+  is_admin: boolean;
 }
 
 function toPublicUser(row: UserRow): ZadocUser {
@@ -25,6 +26,7 @@ function toPublicUser(row: UserRow): ZadocUser {
     phone: row.phone,
     language: row.language,
     created_at: row.created_at,
+    isAdmin: row.is_admin === true,
   };
 }
 
@@ -44,7 +46,7 @@ export async function createUser(params: {
       pin_hash,
       referred_by_code: params.referredByCode ?? null,
     })
-    .select('id, name, phone, language, created_at')
+    .select('id, name, phone, language, created_at, is_admin')
     .single();
 
   if (error || !data) {
@@ -56,7 +58,7 @@ export async function createUser(params: {
 export async function findUserByPhone(phone: string): Promise<UserRow | null> {
   const { data } = await supabaseAdmin
     .from('users')
-    .select('id, name, phone, pin_hash, language, created_at')
+    .select('id, name, phone, pin_hash, language, created_at, is_admin')
     .eq('phone', phone)
     .is('deleted_at', null)
     .maybeSingle();
