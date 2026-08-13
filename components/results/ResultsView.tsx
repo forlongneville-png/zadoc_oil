@@ -1,9 +1,9 @@
 // ROUTE: components/results/ResultsView.tsx  (only the UnlockModal usage changed — rest is identical)
 'use client';
-
+import { ResultsSkeleton } from '@/components/results/ResultsSkeleton';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, TriangleAlert } from 'lucide-react';
+import { TriangleAlert } from 'lucide-react';
 import { ProfileCard } from './ProfileCard';
 import { OilSection } from './OilSection';
 import { FloatingCTA } from './FloatingCTA';
@@ -53,12 +53,7 @@ export function ResultsView({ profileId, onClose }: { profileId: string; onClose
   }, [refetch]);
 
   if (loading) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-zadoc border border-zadoc-border bg-white px-6 py-10 text-center">
-        <Loader2 size={22} className="animate-spin text-zadoc-muted" />
-        <p className="text-sm text-zadoc-muted">Loading results…</p>
-      </div>
-    );
+    return <ResultsSkeleton />;
   }
 
   if (error || !profile) {
@@ -74,13 +69,7 @@ export function ResultsView({ profileId, onClose }: { profileId: string; onClose
   }
 
   if (profile.analysis_status !== 'complete' || !analysis) {
-    return (
-      <div className="flex flex-1 flex-col items-center gap-3 rounded-zadoc border border-zadoc-border bg-white px-6 py-10 text-center">
-        <Loader2 size={22} className="animate-spin text-zadoc-muted" />
-        <p className="text-sm font-medium">Analyzing {profile.name}&apos;s skin</p>
-        <p className="text-xs text-zadoc-muted max-w-xs">This usually takes a moment.</p>
-      </div>
-    );
+    return <ResultsSkeleton />;
   }
 
   return (

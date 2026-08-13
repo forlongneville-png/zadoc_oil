@@ -14,7 +14,7 @@ import GuidanceStep from '@/components/scan/steps/GuidanceStep';
 import CameraStep from '@/components/scan/steps/CameraStep';
 import PhotoConfirmStep from '@/components/scan/steps/PhotoConfirmStep';
 import AnalyzingStep from '@/components/scan/steps/AnalyzingStep';
-import { ResultsView } from '@/components/results/ResultsView';
+
 import {
   INITIAL_SCAN_ANSWERS,
   SCAN_STEP_ORDER,
@@ -85,8 +85,8 @@ export default function ScanFlow({ profileId, profileName, onComplete, onClose }
 
   const handleAnalysisSuccess = (result: SkinAnalysis) => {
     setAnalysis(result);
-    goToStep('complete');
     onComplete(result);
+    onClose(); // close the sheet immediately — results now render on the dashboard, not here
   };
 
   const renderStep = () => {
@@ -187,9 +187,9 @@ export default function ScanFlow({ profileId, profileName, onComplete, onClose }
         ) : null;
 
       case 'complete':
-        // Piece 4's placeholder "analysis complete" screen is replaced here with
-        // Piece 5's real results view, per the merge spec.
-        return analysis ? <ResultsView profileId={profileId} onClose={onClose} /> : null;
+        // Unreachable now — handleAnalysisSuccess closes the sheet directly
+        // and results render on the dashboard via ProfileBody instead.
+        return null;
 
       default:
         return null;
