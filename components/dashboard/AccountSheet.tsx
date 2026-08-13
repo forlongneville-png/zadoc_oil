@@ -1,6 +1,7 @@
 'use client';
 
-import { ChevronRight, MessageCircle, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ChevronRight, MessageCircle, Shield, User } from 'lucide-react';
 import type { ZadocUser } from '@/types/zadoc';
 import BottomSheet from './BottomSheet';
 
@@ -15,6 +16,8 @@ interface AccountSheetProps {
 }
 
 export default function AccountSheet({ open, onClose, user, onRequestLogout }: AccountSheetProps) {
+  const router = useRouter();
+
   return (
     <BottomSheet open={open} onClose={onClose} title="Account">
       <div className="flex flex-col items-center text-center gap-3 mb-6">
@@ -37,7 +40,21 @@ export default function AccountSheet({ open, onClose, user, onRequestLogout }: A
           <MessageCircle size={18} className="text-zadoc-muted" />
           <span className="flex-1 text-left text-sm font-medium">Customer Support</span>
           <ChevronRight size={16} className="text-zadoc-muted" />
-        </a>
+     </a>
+
+        {user.isAdmin && (
+          <button
+            onClick={() => {
+              onClose();
+              router.push('/admin');
+            }}
+            className="flex items-center gap-3 rounded-zadoc-sm border border-zadoc-border bg-white px-4 py-3.5 hover:bg-black/5 transition-colors"
+          >
+            <Shield size={18} className="text-zadoc-muted" />
+            <span className="flex-1 text-left text-sm font-medium">Admin panel</span>
+            <ChevronRight size={16} className="text-zadoc-muted" />
+          </button>
+        )}
 
         <button
           onClick={onRequestLogout}

@@ -21,15 +21,22 @@ export async function getSession(): Promise<ZadocUser | null> {
   const userId = getSessionUserId();
   if (!userId) return null;
 
-  const { data, error } = await supabaseAdmin
+const { data, error } = await supabaseAdmin
     .from('users')
-    .select('id, name, phone, language, created_at')
+    .select('id, name, phone, language, created_at, is_admin')
     .eq('id', userId)
     .is('deleted_at', null)
     .maybeSingle();
 
   if (error || !data) return null;
-  return data as ZadocUser;
+  return {
+    id: data.id,
+    name: data.name,
+    phone: data.phone,
+    language: data.language,
+    created_at: data.created_at,
+    isAdmin: data.is_admin === true,
+  };
 }
 
 export async function hasValidSession(): Promise<boolean> {
