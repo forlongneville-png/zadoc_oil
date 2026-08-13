@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Sparkles, Sun, Ruler, ScanFace } from 'lucide-react';
+ 
 import ScanOverlay from '@/components/scan/ScanOverlay';
 import Toast from '@/components/scan/Toast';
 import GreetingStep from '@/components/scan/steps/GreetingStep';
@@ -24,24 +24,24 @@ import {
 } from '@/lib/scan/types';
 import type { SkinAnalysis } from '@/types/zadoc';
 
-const GUIDANCE_CONTENT: Record<string, { icon: typeof Sparkles; title: string; body: string }> = {
+const GUIDANCE_CONTENT: Record<string, { image: string; title: string; body: string }> = {
   'guidance-camera': {
-    icon: Sparkles,
+    image: '/scan-guidance/clean-camera.jpg',
     title: 'Clean your camera',
     body: 'Wipe your lens before taking the photo so we can get a clear, sharp image of your skin.',
   },
   'guidance-lighting': {
-    icon: Sun,
+    image: '/scan-guidance/good-lighting.jpg',
     title: 'Find good lighting',
     body: 'Stand somewhere bright and evenly lit. Avoid dark rooms or harsh shadows on your face.',
   },
   'guidance-distance': {
-    icon: Ruler,
+    image: '/scan-guidance/right-distance.jpg',
     title: 'Keep your face at the right distance',
     body: 'Make sure your whole face is clearly visible in frame — not too close, not too far.',
   },
   'guidance-look': {
-    icon: ScanFace,
+    image: '/scan-guidance/look-at-camera.jpg',
     title: 'Look directly at the camera',
     body: 'Avoid sunglasses, masks, or hands covering your face, and skip extreme angles.',
   },
@@ -144,7 +144,7 @@ export default function ScanFlow({ profileId, profileName, onComplete, onClose }
         const content = GUIDANCE_CONTENT[step];
         return (
           <GuidanceStep
-            icon={content.icon}
+            image={content.image}
             title={content.title}
             body={content.body}
             onContinue={goNext}

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'lucide-react';
 import { mockQualityCheck } from '@/lib/scan/mockQualityCheck';
+import ZadocLogo from '@/components/dashboard/ZadocLogo';
 
 interface CameraStepProps {
   onCaptured: (dataUrl: string) => void;
@@ -80,8 +81,9 @@ export default function CameraStep({ onCaptured, onQualityFail }: CameraStepProp
 
   return (
     <div className="flex-1 flex flex-col -mx-6 -mb-6">
-      <div className="px-6 pb-3 text-center">
-        <span className="text-xs tracking-widest uppercase text-zadoc-muted">zadoc.online</span>
+      <div className="px-6 pb-3 flex flex-col items-center gap-1">
+        <ZadocLogo size={28} />
+        <span className="text-xs tracking-widest text-zadoc-muted">www.zadoc.online</span>
       </div>
 
       <div className="relative flex-1 bg-black overflow-hidden">
