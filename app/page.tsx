@@ -1,4 +1,5 @@
-// ROUTE: app/page.tsx
+// APP: zadoc.online
+// ROUTE: app/page.tsx  (landing page — GET /)
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -110,6 +111,15 @@ export default function Home() {
 
     const THIRTY_DAYS = 60 * 60 * 24 * 30;
     document.cookie = `zadoc_ref=${encodeURIComponent(ref)}; path=/; max-age=${THIRTY_DAYS}; SameSite=Lax`;
+
+    // Report this as a click to Admin — fire-and-forget, never blocks the
+    // landing page. Only fires once per visitor since we already bailed
+    // above if a zadoc_ref cookie was already set.
+    fetch('/api/referral/click', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ referralCode: ref }),
+    }).catch(() => {});
   }, []);
 
   // Brief loading state while language resolves client-side — logo

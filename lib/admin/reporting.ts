@@ -1,3 +1,6 @@
+// APP: zadoc.online
+// FILE: lib/admin/reporting.ts
+//
 // SERVER-ONLY — only ever call these from Route Handlers (app/api/**),
 // same convention as lib/supabase/admin.ts. Never import this into a
 // Client Component.
@@ -21,7 +24,8 @@ const ADMIN_REPORTING_SECRET = process.env.ADMIN_REPORTING_SECRET;
 
 type AdminEvent =
   | { event: 'signup'; userId: string; phone: string; referralCode: string | null }
-  | { event: 'payment'; userId: string; profileId: string; paymentId: string; amount: number };
+  | { event: 'payment'; userId: string; profileId: string; paymentId: string; amount: number }
+  | { event: 'click'; referralCode: string };
 
 async function sendToAdmin(payload: AdminEvent): Promise<void> {
   if (!ADMIN_REPORTING_URL || !ADMIN_REPORTING_SECRET) {
@@ -60,6 +64,13 @@ async function sendToAdmin(payload: AdminEvent): Promise<void> {
     // eslint-disable-next-line no-console
     console.error(`[zadoc->admin] "${payload.event}" report threw`, err);
   }
+}
+
+/** Call once per fresh ?ref= landing (see app/page.tsx's cookie-set guard,
+ * which already ensures this only fires the first time a given visitor
+ * picks up a code). Feeds Admin's referral_click_totals. */
+export function reportClick(params: { referralCode: string }): void {
+  void sendToAdmin({ event: 'click', referralCode: params.referralCode });
 }
 
 /** Call once, right after a new user row is created. Never awaited by the
