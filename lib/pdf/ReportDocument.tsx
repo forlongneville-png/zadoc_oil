@@ -1,3 +1,4 @@
+// ROUTE: lib/pdf/ReportDocument.tsx
 /* eslint-disable jsx-a11y/alt-text -- these are @react-pdf/renderer <Image>
    elements (PDF nodes), not HTML <img> tags, so the alt prop doesn't apply. */
 // PDF generation choice: @react-pdf/renderer, rendered server-side in the
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
   productRank: { fontSize: 9, color: COLORS.muted, marginBottom: 6 },
   productReason: { fontSize: 10, lineHeight: 1.4, marginBottom: 6 },
   productMeta: { fontSize: 9, color: COLORS.muted, lineHeight: 1.4 },
+  productPrice: { fontSize: 10, fontFamily: 'Helvetica-Bold', marginBottom: 4 },
   footerBar: { position: 'absolute', bottom: 30, left: 40, right: 40, fontSize: 8, color: COLORS.muted, textAlign: 'center' },
   disclaimerBox: {
     borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, padding: 16,
@@ -143,10 +145,15 @@ export function ReportDocument({ profile, insights, best, avoid, logoDataUri }: 
         <Text style={styles.sectionTitle}>Best oils for you</Text>
         {best.map((r) => (
           <View key={r.id} style={styles.productCard}>
-            <Image src={r.product.images[0]?.image_url} style={styles.productImage} />
+            {r.product.images[0]?.image_url ? (
+              <Image src={r.product.images[0].image_url} style={styles.productImage} />
+            ) : null}
             <View style={styles.productBody}>
               <Text style={styles.productRank}>#{r.rank} RECOMMENDED</Text>
               <Text style={styles.productName}>{r.product.name}</Text>
+              {r.product.price != null ? (
+                <Text style={styles.productPrice}>{r.product.price.toLocaleString()} FCFA</Text>
+              ) : null}
               <Text style={styles.productReason}>{r.reason}</Text>
               <Text style={styles.productMeta}>Benefits: {r.product.benefits.join(', ')}</Text>
               <Text style={styles.productMeta}>Usage: {r.product.usage}</Text>
@@ -161,10 +168,15 @@ export function ReportDocument({ profile, insights, best, avoid, logoDataUri }: 
         <Text style={styles.sectionTitle}>Oils to avoid</Text>
         {avoid.map((r) => (
           <View key={r.id} style={styles.productCard}>
-            <Image src={r.product.images[0]?.image_url} style={styles.productImage} />
+            {r.product.images[0]?.image_url ? (
+              <Image src={r.product.images[0].image_url} style={styles.productImage} />
+            ) : null}
             <View style={styles.productBody}>
               <Text style={[styles.productRank, { color: COLORS.avoid }]}>#{r.rank} AVOID</Text>
               <Text style={styles.productName}>{r.product.name}</Text>
+              {r.product.price != null ? (
+                <Text style={styles.productPrice}>{r.product.price.toLocaleString()} FCFA</Text>
+              ) : null}
               <Text style={styles.productReason}>{r.reason}</Text>
               <Text style={styles.productMeta}>Benefits: {r.product.benefits.join(', ')}</Text>
               <Text style={styles.productMeta}>Warnings: {r.product.warnings}</Text>

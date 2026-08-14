@@ -8,7 +8,6 @@ import { ReportDocument } from '@/lib/pdf/ReportDocument';
 import { getSessionUserId } from '@/lib/auth/session';
 import { getProfileForUser } from '@/lib/profiles/db';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { signProfileImageUrl } from '@/lib/storage/profile-images';
 import type { ProductRecommendation } from '@/types/zadoc';
 
 export const runtime = 'nodejs'; // @react-pdf/renderer needs the Node runtime, not edge
@@ -136,11 +135,17 @@ export async function GET(_req: NextRequest, { params }: { params: { profileId: 
     }) as unknown as React.ReactElement<DocumentProps>
   );
 
+  // profile.name is free text (see app/api/profiles/route.ts — only trimmed
+  // and length-limited, no character restriction), so it can't go straight
+  // into a quoted Content-Disposition value: a stray `"` would break out of
+  // the quotes and malform the header. Strip to a safe filename slug instead.
+  const safeName = profile.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'profile';
+
   return new NextResponse(buffer as unknown as BodyInit, {
     status: 200,
     headers: {
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="zadoc-report-${profile.name.toLowerCase()}.pdf"`,
+      'Content-Disposition': `attachment; filename="zadoc-report-${safeName}.pdf"`,
       'Cache-Control': 'no-store',
     },
   });
