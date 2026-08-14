@@ -1,3 +1,7 @@
+<!-- FILE: public/llms.txt -->
+<!-- ROUTE: /llms.txt (static, served as-is from /public) -->
+<!-- Phase 10 (SEO fix): reviewed, no change needed — already accurate and current. -->
+
 # Zadoc
 
 > Zadoc is a skincare app for Cameroon and francophone Africa. A user takes

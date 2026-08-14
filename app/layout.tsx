@@ -1,3 +1,9 @@
+// FILE: app/layout.tsx
+// ROUTE: root layout — wraps every page in the app.
+//
+// Phase 10 (SEO fix): added JSON-LD structured data below so a Google
+// recrawl has a strong, unambiguous signal for what this domain now is,
+// to help replace the old cached "bpaste" listing rather than merge with it.
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
@@ -70,10 +76,42 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Zadoc',
+  url: SITE_URL,
+  description:
+    'Take a photo of your face and let Zadoc analyze your skin profile to discover which natural oils actually suit you.',
+  applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'Web',
+  image: `${SITE_URL}/logo/zadoc-logo.jpeg`,
+  offers: {
+    '@type': 'Offer',
+    priceCurrency: 'XAF',
+    category: 'one-time fee',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Terabyte',
+    url: SITE_URL,
+  },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {/* Structured data: tells search engines what this site actually is,
+            which helps a recrawl replace any stale/old cached listing for
+            this domain rather than merging with it. */}
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
