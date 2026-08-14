@@ -19,6 +19,18 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   // a webhook that might never arrive. This turns "I paid and nothing
   // happened" into "confirms within a few seconds" even when the webhook is
   // delayed, missed, or rejected for any reason.
+  //
+  // IMPORTANT — asymmetric on purpose: this poll may only ever *confirm
+  // success*. It must never write 'failed' or 'expired'. A single opportunistic
+  // status read is not authoritative — mobile-money (MTN/Orange) payments
+  // routinely sit in an ambiguous state while the payer is still confirming
+  // the USSD prompt on their phone, and a snapshot read can catch that
+  // in-flight moment and misreport it as failed. That's a legitimate payment
+  // getting shown to the user as "failed," which is exactly what must never
+  // happen. Negative outcomes are the webhook's call alone: it's the
+  // provider's own pushed, deliberate signal, not a racy poll. If the
+  // webhook is ever wrong or delayed, worst case here is the user keeps
+  // seeing "still confirming" — never a false failure.
   if (payment.status === 'pending' && payment.provider_transaction_id) {
     try {
       const liveStatus = await fapshiGetPaymentStatus(payment.provider_transaction_id);
@@ -34,10 +46,8 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
             amount: updated.amount,
           });
         }
-      } else if (liveStatus === 'failed' || liveStatus === 'expired') {
-        const updated = await updatePaymentStatus(payment.id, liveStatus);
-        if (updated) payment = updated;
       }
+      // Deliberately no else-branch for 'failed' / 'expired' — see comment above.
     } catch {
       // Fapshi lookup failed (network blip, bad creds, etc.) — fall through
       // and return whatever we already have locally. The next poll retries.

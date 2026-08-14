@@ -20,7 +20,9 @@ const webhookPayloadSchema = z.object({
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
-  const signatureHeader = req.headers.get('x-fapshi-signature') ?? req.headers.get('fapshi-signature');
+  // Confirmed against Fapshi's docs: the header is `x-wh-secret`, containing
+  // the raw secret you set on the Fapshi dashboard (not a computed signature).
+  const signatureHeader = req.headers.get('x-wh-secret');
 
   if (!verifyFapshiWebhookSignature(rawBody, signatureHeader)) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });

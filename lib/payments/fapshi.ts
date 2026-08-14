@@ -56,25 +56,25 @@ export async function fapshiInitiatePay(params: {
 
 /**
  * Verifies a Fapshi webhook delivery using the shared FAPSHI_WEBHOOK_SECRET.
- * Fapshi's exact signing scheme (header name / HMAC construction) should be
- * confirmed against their docs; this implements the standard pattern of an
- * HMAC-SHA256 over the raw request body, compared in constant time, with a
- * fallback to a shared-secret header for providers that use that instead.
+ *
+ * Confirmed against Fapshi's actual docs (docs.fapshi.com/en/api-reference/
+ * endpoint/webhook, "Webhook Security"): there is no HMAC signing scheme.
+ * When a webhook secret is set on the Fapshi dashboard, every webhook
+ * request includes a header called `x-wh-secret` whose value IS the secret
+ * you configured — a plain equality check, not a signature over the body.
+ * (An earlier version of this function assumed an HMAC-SHA256 scheme and
+ * checked the wrong header name entirely — `x-fapshi-signature` — which
+ * Fapshi never sends, so every real webhook was silently rejected with 401.)
  */
 export function verifyFapshiWebhookSignature(rawBody: string, signatureHeader: string | null): boolean {
   const secret = process.env.FAPSHI_WEBHOOK_SECRET;
   if (!secret) return false;
   if (!signatureHeader) return false;
 
-  const expected = crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
-
-  // Plain shared-secret header (some Fapshi setups send the secret directly).
-  if (signatureHeader === secret) return true;
-
   try {
-    const sigBuf = Buffer.from(signatureHeader);
-    const expectedBuf = Buffer.from(expected);
-    return sigBuf.length === expectedBuf.length && crypto.timingSafeEqual(sigBuf, expectedBuf);
+    const receivedBuf = Buffer.from(signatureHeader);
+    const secretBuf = Buffer.from(secret);
+    return receivedBuf.length === secretBuf.length && crypto.timingSafeEqual(receivedBuf, secretBuf);
   } catch {
     return false;
   }
