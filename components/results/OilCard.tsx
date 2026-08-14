@@ -1,3 +1,4 @@
+// ROUTE: components/results/OilCard.tsx
 import Image from 'next/image';
 import { Lock } from 'lucide-react';
 import type { RecommendationListItem } from '@/lib/types';
@@ -59,6 +60,11 @@ export function OilCard({
         <span className={`text-xs font-semibold ${accent}`}>#{item.rank}</span>
         <h3 className="truncate text-sm font-semibold">{item.product.name}</h3>
         <p className="mt-0.5 line-clamp-1 text-xs text-zadoc-muted">{item.product.description}</p>
+        {item.product.price != null && (
+          <p className="mt-0.5 text-xs font-medium text-zadoc-foreground">
+            {item.product.price.toLocaleString()} FCFA
+          </p>
+        )}
         <button
           onClick={() => onOpenDetail(item)}
           className="mt-1.5 text-xs font-medium underline underline-offset-2"

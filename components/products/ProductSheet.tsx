@@ -1,3 +1,4 @@
+// ROUTE: components/products/ProductSheet.tsx
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
@@ -72,7 +73,12 @@ function UnlockedContent({ item }: { item: Extract<RecommendationListItem, { loc
     <div className="pb-8">
       <ImageCarousel images={product.images} alt={product.name} />
       <div className="space-y-6 px-5 pt-5">
-        <h2 className="text-xl font-semibold">{product.name}</h2>
+        <div>
+          <h2 className="text-xl font-semibold">{product.name}</h2>
+          {product.price != null && (
+            <p className="mt-0.5 text-sm font-medium text-zadoc-muted">{product.price.toLocaleString()} FCFA</p>
+          )}
+        </div>
 
         <Section title="What it is">
           <p className="text-sm leading-relaxed text-zadoc-foreground">{product.description}</p>

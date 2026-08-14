@@ -1,3 +1,4 @@
+// ROUTE: app/api/reports/[profileId]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
@@ -51,7 +52,7 @@ export async function GET(_req: NextRequest, { params }: { params: { profileId: 
   const { data: recRows } = await supabaseAdmin
     .from('product_recommendations')
     .select(
-      'id, product_id, skin_type, recommendation_type, rank, reason, products(id, name, slug, description, category, benefits, usage, warnings, active, product_images(image_url, display_order))'
+      'id, product_id, skin_type, recommendation_type, rank, reason, products(id, name, slug, description, category, benefits, usage, warnings, active, price, product_images(image_url, display_order))'
     )
     .eq('skin_type', profile.skin_type ?? 'normal')
     .order('rank', { ascending: true });
@@ -73,6 +74,7 @@ export async function GET(_req: NextRequest, { params }: { params: { profileId: 
       usage: string;
       warnings: string;
       active: boolean;
+      price: number | null;
       product_images: { image_url: string; display_order: number }[];
     } | null;
   };
@@ -97,6 +99,7 @@ export async function GET(_req: NextRequest, { params }: { params: { profileId: 
         usage: row.products.usage,
         warnings: row.products.warnings,
         active: row.products.active,
+        price: row.products.price,
         images: sortedImages,
       },
     };

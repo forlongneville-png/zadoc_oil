@@ -1,4 +1,4 @@
-// FILE PATH: components/admin/JsonImportPanel.tsx
+// ROUTE: components/admin/JsonImportPanel.tsx
 'use client';
 
 import { useState } from 'react';
@@ -14,6 +14,7 @@ const PLACEHOLDER = `[
     "usage": "Apply 2-3 drops at night",
     "warnings": "Patch test before first use",
     "active": true,
+    "price": 5000,
     "recommendations": [
       { "skin_type": "dry", "recommendation_type": "best", "rank": 1, "reason": "Best for dry skin" }
     ]
@@ -42,6 +43,7 @@ export function JsonImportPanel({ onImport }: { onImport: (drafts: ProductDraft[
           usage: item.usage ?? '',
           warnings: item.warnings ?? '',
           active: item.active ?? true,
+          price: item.price != null ? String(item.price) : '',
           recommendations: Array.isArray(item.recommendations)
             ? item.recommendations.map((r: any) => ({
                 id: Math.random().toString(36).slice(2, 10),

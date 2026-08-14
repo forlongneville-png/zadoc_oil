@@ -1,4 +1,4 @@
-// FILE PATH: lib/admin/productSchema.ts
+// ROUTE: lib/admin/productSchema.ts
 import { z } from 'zod';
 
 // Validation for the internal /add_products tool. Mirrors the shape of
@@ -35,6 +35,9 @@ export const productSchema = z.object({
   usage: z.string().trim().max(1000).optional().default(''),
   warnings: z.string().trim().max(1000).optional().default(''),
   active: z.boolean().optional().default(true),
+  // Matches products.price numeric(10,2) — nullable, no default. Omitted or
+  // left blank in the form means "no price set yet," not zero.
+  price: z.number().nonnegative().max(99999999.99).nullable().optional(),
   images: z.array(productImageSchema).max(5).optional().default([]),
   recommendations: z.array(recommendationSchema).max(20).optional().default([]),
 });

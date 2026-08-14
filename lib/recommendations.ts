@@ -1,3 +1,4 @@
+// ROUTE: lib/recommendations.ts
 import type { RecommendationType, SkinType } from '@/types/zadoc';
 import type { RecommendationListItem } from '@/lib/types';
 import { supabaseAdmin } from '@/lib/supabase/admin';
@@ -17,6 +18,7 @@ interface ProductRow {
   usage: string;
   warnings: string;
   active: boolean;
+  price: number | null;
   product_images: { image_url: string; display_order: number }[];
 }
 
@@ -38,7 +40,7 @@ export async function buildRecommendationList(
   const { data, error } = await supabaseAdmin
     .from('product_recommendations')
     .select(
-      'id, product_id, skin_type, recommendation_type, rank, reason, products!inner(id, name, slug, description, category, benefits, usage, warnings, active, product_images(image_url, display_order))'
+      'id, product_id, skin_type, recommendation_type, rank, reason, products!inner(id, name, slug, description, category, benefits, usage, warnings, active, price, product_images(image_url, display_order))'
     )
     .eq('skin_type', skinType)
     .eq('recommendation_type', type)
@@ -83,6 +85,7 @@ export async function buildRecommendationList(
           usage: row.products!.usage,
           warnings: row.products!.warnings,
           active: row.products!.active,
+          price: row.products!.price,
           images,
         },
       };
