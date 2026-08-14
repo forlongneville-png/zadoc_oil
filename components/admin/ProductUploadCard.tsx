@@ -53,12 +53,10 @@ export function makeBlankProduct(): ProductDraft {
 
 export function ProductUploadCard({
   draft,
-  adminPassword,
   onChange,
   onRemove,
 }: {
   draft: ProductDraft;
-  adminPassword: string;
   onChange: (next: ProductDraft) => void;
   onRemove: () => void;
 }) {
@@ -140,7 +138,6 @@ export function ProductUploadCard({
 
       const res = await fetch('/api/admin/products/upload-image', {
         method: 'POST',
-        headers: { 'x-zadoc-admin-password': adminPassword },
         body: form,
       });
       const body = await res.json();
@@ -188,7 +185,7 @@ export function ProductUploadCard({
 
       const res = await fetch('/api/admin/products', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-zadoc-admin-password': adminPassword },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
       const body = await res.json();

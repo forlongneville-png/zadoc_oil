@@ -2,10 +2,11 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { productSchema } from '@/lib/admin/productSchema';
-import { isAddProductsRequestAllowed } from '@/lib/admin/auth';
+import { requireAdmin } from '@/lib/admin/auth';
 
-export async function GET(request: Request) {
-  if (!isAddProductsRequestAllowed(request)) {
+export async function GET() {
+  const admin = await requireAdmin();
+  if (!admin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -24,7 +25,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (!isAddProductsRequestAllowed(request)) {
+  const admin = await requireAdmin();
+  if (!admin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

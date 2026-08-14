@@ -138,6 +138,12 @@ export default function AdminDashboard({ adminName }: AdminDashboardProps) {
           <p className="text-base font-semibold">Admin panel</p>
           <p className="text-xs text-zadoc-muted">Signed in as {adminName}</p>
         </div>
+        <button
+          onClick={() => router.push('/add_products')}
+          className="ml-auto rounded-full border border-zadoc-border bg-white px-4 py-2 text-sm font-medium hover:bg-black/5 transition-colors"
+        >
+          Add products
+        </button>
       </header>
 
       <main className="px-5 py-6 max-w-3xl mx-auto flex flex-col gap-8">

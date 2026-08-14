@@ -1,7 +1,7 @@
 // ROUTE: app/api/admin/products/upload-image/route.ts
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { isAddProductsRequestAllowed } from '@/lib/admin/auth';
+import { requireAdmin } from '@/lib/admin/auth';
 
 export const runtime = 'nodejs';
 
@@ -9,7 +9,8 @@ const MAX_BYTES = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export async function POST(request: Request) {
-  if (!isAddProductsRequestAllowed(request)) {
+  const admin = await requireAdmin();
+  if (!admin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

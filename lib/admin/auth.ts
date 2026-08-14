@@ -1,20 +1,8 @@
-// ROUTE: lib/admin/auth.ts   (NEW FILE)
-// Server-side gate for the internal /add_products tool. The client keeps a
-// password in sessionStorage once unlocked and sends it back as a header on
-// every write call — this is the check that actually matters, since the
-// client-side gate alone can be bypassed with a raw curl request.
-
-export function isAddProductsRequestAllowed(req: Request): boolean {
-  const header = req.headers.get('x-zadoc-admin-password');
-  return !!header && !!process.env.ADD_PRODUCTS_PASSWORD && header === process.env.ADD_PRODUCTS_PASSWORD;
-}
-
-// ---------------------------------------------------------------------------
-// Real admin gate (Phase 3) — used by everything under app/api/admin/overview,
-// app/api/admin/users, app/api/admin/payments. Checks the actual logged-in
-// session against users.is_admin, NOT the password header above. The
-// password gate above stays in place for /add_products until Phase 6 decides
-// whether to fold that tool into this one.
+// ROUTE: lib/admin/auth.ts
+// Single real admin gate, used by everything under app/api/admin/** —
+// including app/api/admin/products/** and app/api/admin/products/upload-image
+// as of Phase 6, which folded the old ADD_PRODUCTS_PASSWORD header check into
+// this is_admin check. There is now exactly one admin auth system.
 import { getSessionUserId } from '@/lib/auth/session';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
